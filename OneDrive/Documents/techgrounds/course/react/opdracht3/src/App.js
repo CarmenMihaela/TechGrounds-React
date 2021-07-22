@@ -1,24 +1,28 @@
-import { useState } from 'react'
+import React, { useState, useRef } from 'react';
+import ItemList from './ItemList';
+import { v4 as uuidv4 } from 'uuid'
 
 function App() {
-  const [names, setNames] = useState([])
+  const [items, setItems] = useState([])
+  const itemNameRef = useRef()
 
-  function handleInput() {
-    let input = document.querySelector('input')
-    setNames(prevState => { 
-      let state = [...prevState]
-      state.unshift(input.value)
+  function handleAddItem(e) {
+    const name = itemNameRef.current.value
+    setItems(prevItems => {
+      let state = [{id: uuidv4(), name: name}, ...prevItems]
+      console.log(state)
       return state
-  })
+    })
   }
 
-  return (
-    <div className="App">
-    <input id = "input" />
-    <button onClick = {handleInput} > Submit Name </button>
-    {names.map(name => <div key={name} className = "" >{name} </div>)}
-    </div>
-  );
-}
+    return (
+      <>
+      <input ref={itemNameRef} type="text" />
+      <button onClick={handleAddItem} >Submit</button>
+      <ItemList items={items} />
+      </>
+    );
+
+  }
 
 export default App;
